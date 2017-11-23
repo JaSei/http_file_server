@@ -10,13 +10,14 @@ import (
 )
 
 var (
-	dir = kingpin.Flag("dir", "prefix path").Required().ExistingDir()
+	port = kingpin.Flag("port", "server port").Default("8080").Int()
+	dir  = kingpin.Flag("dir", "prefix path").Required().ExistingDir()
 )
 
 func main() {
 	kingpin.Parse()
 
-	log.Fatal(fasthttp.ListenAndServe(":8080", func(ctx *fasthttp.RequestCtx) {
+	log.Fatal(fasthttp.ListenAndServe(fmt.Sprintf(":%d", *port), func(ctx *fasthttp.RequestCtx) {
 		path, err := pathutil.NewPath(*dir, string(ctx.Path()))
 
 		if err != nil {
